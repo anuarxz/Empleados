@@ -1,0 +1,165 @@
+<div class="container principal p-2">
+    <div class="text-center text-dark m-3">
+        <h3 class="mb-4">Listado de empleados</h3>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-ls-12">
+            <div class="table-responsive rounded-table">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>
+                                <input type="text" class="form-control" id="filterName" placeholder="Nombre" [(ngModel)]="filterName" (input)="onInputChange()">
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" id="filterSurname1" placeholder="Apellido1" [(ngModel)]="filterSurname1" (input)="onInputChange()">
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" id="filterSurname2" placeholder="Apellido2" [(ngModel)]="filterSurname2" (input)="onInputChange()">
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" id="filterEmail" placeholder="Correo" [(ngModel)]="filterEmail" (input)="onInputChange()">
+                            </th>
+                            <th class="d-flex justify-content-between align-items-center">
+                                <button type="button" class="btn btn-outline-success btn-sm m-1" (click)="clearFilters()">
+                                    <i class="fas fa-broom"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-dark btn-sm m-1" data-toggle="modal" data-target="#editUserModal" (click)="clearSelectedUser()" >
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of usuarios | paginate: { itemsPerPage: 10, currentPage: p } let i=index">
+                            <td>{{ (p - 1) * 10 + i + 1 }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.surname1 }}</td>
+                            <td>{{ user.surname2 }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-info btn-sm m-1" data-toggle="modal" data-target="#editUserModal" (click)="setSelectedUser(user)">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm m-1" data-toggle="modal" data-target="#deleteUserModal" (click)="setSelectedUser(user)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Agrega la paginación al final de la tabla -->
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Edición --
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Contenido del formulario de edición --
+                <div class="form-group">
+                    <label for="editName">Nombre:</label>
+                    <input type="text" class="form-control" id="editName" [(ngModel)]="selectedUserName">
+                </div>
+                <div class="form-group">
+                    <label for="editSurname1">Apellido 1:</label>
+                    <input type="text" class="form-control" id="editSurname1" [(ngModel)]="selectedUserSurname1">
+                </div>
+                <div class="form-group">
+                    <label for="editSurname2">Apellido 2:</label>
+                    <input type="text" class="form-control" id="editSurname2" [(ngModel)]="selectedUserSurname2">
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Correo Electrónico:</label>
+                    <input type="email" class="form-control" id="editEmail" [(ngModel)]="selectedUserEmail">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+
+<!-- Modal de Usuario -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">{{ isEditMode ? 'Editar Usuario' : 'Añadir Usuario' }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Contenido del formulario -->
+                <div class="form-group">
+                    <label for="userName">Nombre:*</label>
+                    <input type="text" class="form-control" id="userName" [(ngModel)]="selectedUserName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userSurname1">Apellido 1:*</label>
+                    <input type="text" class="form-control" id="userSurname1" [(ngModel)]="selectedUserSurname1"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="userSurname2">Apellido 2:</label>
+                    <input type="text" class="form-control" id="userSurname2" [(ngModel)]="selectedUserSurname2">
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Correo Electrónico:*</label>
+                    <input type="email" class="form-control" id="userEmail" [(ngModel)]="selectedUserEmail" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" [disabled]="!isValidForm()" (click)="saveChanges()" data-dismiss="modal">
+                    {{ isEditMode ? 'Guardar Cambios' : 'Añadir Usuario' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal de Eliminación -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Eliminar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Mensaje de confirmación de eliminación -->
+                <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="deleteUser()" data-dismiss="modal">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
